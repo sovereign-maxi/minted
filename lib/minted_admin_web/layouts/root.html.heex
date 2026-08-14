@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title default="MINTED - ADMIN">{assigns[:page_title]}</.live_title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwYSIvPgogIDxwYXRoIGQ9Ik01NCAwVjczMEgyMTdMMjk5IDQxNkwzODIgNzMwSDU0NlYwSDQyOVYzMDdRNDI5IDM3MCA0MzIuNSA0MzcuNVE0MzYgNTA1IDQ0MS4wIDU2OC41UTQ0NiA2MzIgNDUyIDY4NEwzNDkgMzE3SDI0NkwxNDcgNjc1UTE1NiA2MDYgMTYzLjUgNTEwLjVRMTcxIDQxNSAxNzEgMzA3VjBaIiBmaWxsPSIjMTBiOTgxIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg5LjQwLDIzLjAwKSBzY2FsZSgwLjAyMjAwLC0wLjAyMjAwKSIvPgo8L3N2Zz4K" />
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+    <link phx-track-static rel="stylesheet" href="/assets/blueprint.css" />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script phx-track-static defer src={~p"/assets/app.js"}></script>
+  </head>
+  <body>
+    {@inner_content}
+  </body>
+</html>

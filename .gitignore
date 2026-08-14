@@ -1,0 +1,52 @@
+# Elixir
+/_build/
+/deps/
+/*.ez
+
+# Rust NIF
+# Cashew NIF build artifacts are in the cashew package
+/priv/native/
+
+# Generated
+/cover/
+/doc/
+erl_crash.dump
+*.beam
+
+# Phoenix digest output (generated on deploy)
+/priv/static/assets/*.gz
+/priv/static/assets/*.br
+/priv/static/assets/*-*.js
+/priv/static/assets/*-*.css
+/priv/static/assets/*-*.wasm
+/priv/static/assets/wasm/
+/priv/static/cache_manifest.json
+/priv/static/fonts/*-*.woff2
+/priv/static/favicon-*
+/priv/static/*.gz
+/priv/static/*.br
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.elixir_ls/
+.idea/
+.vscode/
+
+# Runtime data
+/data/
+/tmp/
+.scratch
+
+# Env
+.env
+*.pem
+*.key
+
+# Key shares (generated per-node during DKG)
+/priv/key_shares/
+
+# Generated keys (secrets — deploy via Ansible, not git)
+/keys/

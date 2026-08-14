@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+# Ensure asdf shims are on PATH (works regardless of Erlang/Elixir version)
+export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"
+
+# Source Rust toolchain (needed for NIF compilation)
+# shellcheck disable=SC1091
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+echo "==> mix format"
+mix format
+
+echo "==> mix credo --strict"
+mix credo --strict
+
+# Run each test category independently so failures are isolated.
+failed=()
+
+echo "==> mix test (unit)"
+mix test test/unit/ || failed+=(unit)
+
+echo "==> mix test --only integration"
+mix test --only integration || failed+=(integration)
+
+echo "==> mix test --only scenario"
+mix test --only scenario || failed+=(scenario)
+
+if [ ${#failed[@]} -gt 0 ]; then
+  echo "FAILED test suites: ${failed[*]}"
+  exit 1
+fi
+
+echo "==> mix dialyzer"
+mix dialyzer --format short
+
+echo "All checks passed."

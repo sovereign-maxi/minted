@@ -1,0 +1,4 @@
+## Pin Erlang distribution to a single port for firewall rules.
+## EPMD uses 4369, distribution uses 9100.
+-kernel inet_dist_listen_min 9100
+-kernel inet_dist_listen_max 9100

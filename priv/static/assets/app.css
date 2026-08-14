@@ -1,0 +1,209 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MINTED — Product CSS
+   Blueprint design system loads via a separate <link> tag in
+   root.html.heex (parallel-fetched, not serial via @import).
+   This file carries the accent override + product-specific rules.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* --- ACCENT OVERRIDE (green) -------------------------------------- */
+
+:root {
+  --bp-accent:         #10b981;
+  --bp-accent-hover:   #34d399;
+  --bp-accent-dim:     rgba(16, 185, 129, 0.12);
+  --bp-accent-overlay: rgba(16, 185, 129, 0.03);
+}
+
+/* --- LAYOUT ------------------------------------------------------ */
+
+/* Wallet page: don't scroll the page, scroll the panels */
+.bp-page { overflow: hidden; }
+
+/* Wallet + activity row fills remaining viewport */
+.bp-page > .bp-grid + .bp-grid {
+  flex: 1; min-height: 0; grid-template-rows: 1fr;
+}
+
+.bp-page > .bp-box:last-child {
+  flex: 1; min-height: 180px;
+}
+
+/* Admin dashboard reuses the wallet's flex chain via .bp-page, but runs
+ * full width. The wallet rule .bp-page > .bp-grid + .bp-grid handles the
+ * "second grid expands to the footer" behaviour automatically. */
+.admin-root .bp-page {
+  max-width: none;
+}
+
+/* Stat grid (row 1) should be content-sized, not stretched. */
+.admin-root .bp-page > .bp-grid:first-of-type {
+  flex: 0 0 auto;
+  grid-template-rows: min-content;
+}
+
+/* --- ACTIONS CARD ------------------------------------------------- */
+
+/* --- METHOD TOGGLE ------------------------------------------------- */
+
+.mt-method-toggle { display: flex; gap: 0.25rem; margin-bottom: 1rem; }
+.mt-method-toggle .bp-btn { flex: 1; width: auto; }
+.mt-method-toggle .bp-btn-primary.active {
+  background: var(--color-accent); color: var(--color-bg);
+}
+.mt-btn-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+
+/* --- IN-FLIGHT DEPOSITS ------------------------------------------- */
+
+.bp-grid.cols-wallet > :last-child > .bp-panel-body { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+
+/* On mobile, hoist the Actions column (tabs + tab content) above the
+ * My Wallet + Activity column so the user's primary interaction
+ * surface is at the top of the page rather than requiring a scroll
+ * past inventory and history to reach it. */
+@media (max-width: 900px) {
+  .bp-grid.cols-wallet > :first-child { order: 2; }
+  .bp-grid.cols-wallet > :last-child { order: 1; }
+}
+
+.bp-tab-desc {
+  font-size: var(--font-sm); color: var(--color-text-muted);
+  margin-bottom: 1.5rem; line-height: 1.7;
+}
+
+/* --- TOKEN INVENTORY ---------------------------------------------- */
+
+.mt-token-list { display: flex; flex-direction: column; }
+
+.mt-token-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 0; border-bottom: 1px solid var(--color-border-faint);
+}
+
+.mt-token-row:last-child { border-bottom: none; }
+
+.mt-token-denom {
+  font-size: var(--font-xs); font-weight: 600; color: var(--color-text-secondary);
+  width: 64px; text-align: right; flex-shrink: 0;
+}
+
+.mt-token-bar-wrap {
+  flex: 1; height: 10px; background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border); overflow: hidden;
+}
+
+.mt-token-bar {
+  height: 100%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 60%, transparent), color-mix(in srgb, var(--color-accent) 30%, transparent));
+  transition: width 0.3s ease;
+}
+
+.mt-token-count {
+  font-size: var(--font-xs); font-weight: 600; color: var(--color-accent);
+  width: 28px; text-align: right; flex-shrink: 0;
+}
+
+/* --- ACTIVITY FEED ------------------------------------------------ */
+
+.mt-activity-feed { display: flex; flex-direction: column; list-style: none; }
+
+.mt-activity-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--color-border-faint);
+  font-size: var(--font-xs);
+}
+
+.mt-activity-row:last-child { border-bottom: none; }
+.mt-activity-row.new { animation: flashIn 2s ease; }
+
+.mt-activity-icon {
+  font-size: var(--font-xs); font-weight: 700; padding: 0.2rem 0.4rem;
+  text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+}
+
+/* Four semantic badge classes:
+ *   .ok       — green  (healthy, solvent, connected, normal operations)
+ *   .info     — blue   (informational, no action needed)
+ *   .warning  — amber  (attention needed, degraded, pending)
+ *   .critical — red    (on fire, deficit, emergency, failure)
+ */
+.mt-activity-icon.ok        { background: var(--color-accent-dim); color: var(--color-accent); }
+.mt-activity-icon.info      { background: color-mix(in srgb, var(--color-info) 12%, transparent); color: var(--color-info); }
+.mt-activity-icon.warning   { background: color-mix(in srgb, var(--color-warning) 12%, transparent); color: var(--color-warning); }
+.mt-activity-icon.critical  { background: color-mix(in srgb, var(--color-danger) 12%, transparent); color: var(--color-danger); }
+
+.mt-activity-detail { flex: 1; color: var(--color-text-secondary); font-weight: 500; }
+.mt-activity-dim    { color: var(--color-text-dim); }
+.mt-activity-time   { color: var(--color-text-dim); flex-shrink: 0; }
+
+
+/* --- FORM ELEMENTS (product-specific) ----------------------------- */
+
+.mt-qr-container { display: flex; justify-content: center; margin-top: 2rem; }
+
+/* --- WELCOME MODAL: body content ---------------------------------- */
+/*
+ * The first-visit phishing-defense modal wraps its prose + host-code
+ * block inside `<.panel><.panel_body>` (matching the deposit modal
+ * chrome). Blueprint's `.bp-modal > p` direct-child rule doesn't
+ * reach nested panel content, so this one scoping class carries the
+ * prose + code styling for everything inside the welcome-modal body.
+ */
+.mt-welcome p {
+  font-size: var(--font-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 0.75rem;
+}
+
+.mt-welcome p:last-of-type {
+  margin-bottom: 1.25rem;
+}
+
+.mt-welcome code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: 0.75rem;
+  margin: 0 0 1rem;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+/* --- INVOICE MODAL (three layers: overlay → modal → card) ----------- */
+
+/* --- SPARKLINE CHARTS --------------------------------------------- */
+
+.mt-sparkline { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; }
+.mt-sparkline:last-child { margin-bottom: 0; }
+
+.mt-sparkline-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: var(--font-2xs); text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.mt-sparkline-label { color: var(--color-text-dim); font-weight: 600; }
+.mt-sparkline-value { color: var(--color-accent); font-weight: 600; }
+
+.mt-sparkline-svg {
+  width: 100%; height: 100px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-faint);
+}
+
+/* --- PANEL ACTIONS ------------------------------------------------ */
+
+a.mt-panel-action, a.mt-panel-action:visited, a.mt-panel-action:hover {
+  cursor: pointer; text-decoration: none;
+}
+a.mt-panel-action:hover { color: var(--color-text-secondary); }
+
+/* --- UTILITIES ---------------------------------------------------- */
+
+.mt-3 { margin-top: 0.75rem; }
+
+/* --- ANIMATIONS --------------------------------------------------- */
+
+@keyframes flashIn { 0% { background: rgba(0, 255, 0, 0.12); } 100% { background: transparent; } }

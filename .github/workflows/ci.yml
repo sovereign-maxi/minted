@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    env:
+      OTP_VERSION: '27.3'
+      ELIXIR_VERSION: '1.19.4'
+
+    steps:
+      - name: Checkout minted
+        uses: actions/checkout@v4
+        with:
+          path: minted
+
+      - name: Checkout cashew
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/cashew
+          path: cashew
+
+      - name: Checkout blueprint
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/blueprint
+          path: blueprint
+
+      - name: Checkout oracle
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/oracle
+          path: oracle
+
+      - name: Checkout seer
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/seer
+          path: seer
+
+      - name: Checkout locker
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/locker
+          path: locker
+
+      - name: Checkout vault
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/vault
+          path: vault
+
+      - name: Checkout firebird
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/firebird
+          path: firebird
+
+      - name: Checkout core
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/core
+          path: core
+
+      - name: Checkout nutty
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-maxi/nutty
+          path: nutty
+
+      - name: Set up Erlang / Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.OTP_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+
+      - name: Set up Rust (stable + wasm32 target)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache mix deps + build
+        uses: actions/cache@v4
+        with:
+          path: |
+            minted/deps
+            minted/_build
+          key: mix-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-${{ hashFiles('minted/mix.lock') }}
+          restore-keys: |
+            mix-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-
+
+      - name: Cache nutty cargo build
+        uses: actions/cache@v4
+        with:
+          path: nutty/target
+          key: nutty-cargo-${{ hashFiles('nutty/Cargo.lock') }}
+          restore-keys: |
+            nutty-cargo-
+
+      - name: Build nutty.wasm and copy into minted
+        working-directory: nutty
+        run: |
+          cargo build --target wasm32-unknown-unknown --release
+          cp target/wasm32-unknown-unknown/release/nutty.wasm ../minted/priv/static/assets/nutty.wasm
+
+      - name: Install dependencies
+        working-directory: minted
+        run: mix deps.get
+
+      - name: Compile deps (loads rustler before cashew force-rebuild)
+        working-directory: minted
+        run: mix deps.compile
+
+      - name: Force-rebuild cashew NIF (dodge stale-cache rustler skip)
+        working-directory: minted
+        run: mix deps.compile cashew --force
+
+      - name: Check formatting
+        working-directory: minted
+        run: mix format --check-formatted
+
+      - name: Credo
+        working-directory: minted
+        run: mix credo --strict
+
+      - name: Unit tests
+        working-directory: minted
+        run: mix test test/unit/
+
+      - name: Integration tests
+        working-directory: minted
+        run: mix test --only integration
+
+      - name: Scenario tests
+        working-directory: minted
+        run: mix test --only scenario
+
+      - name: Dialyzer
+        working-directory: minted
+        run: mix dialyzer --format short

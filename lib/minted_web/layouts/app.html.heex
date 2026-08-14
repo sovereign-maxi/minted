@@ -1,0 +1,41 @@
+<div
+  :if={Phoenix.Flash.get(@flash, :info)}
+  id="flash-info"
+  role="alert"
+  class="bp-flash bp-flash-info"
+  phx-click="lv:clear-flash"
+  phx-value-key="info"
+  phx-hook="FlashAutoClear"
+  data-key="info"
+  data-dismiss-after="4000"
+>
+  {Phoenix.Flash.get(@flash, :info)}
+</div>
+<div
+  :if={Phoenix.Flash.get(@flash, :success)}
+  id="flash-success"
+  role="alert"
+  class="bp-flash bp-flash-success"
+  phx-click="lv:clear-flash"
+  phx-value-key="success"
+  phx-hook="FlashAutoClear"
+  data-key="success"
+  data-dismiss-after="4000"
+>
+  {Phoenix.Flash.get(@flash, :success)}
+</div>
+<div
+  :if={Phoenix.Flash.get(@flash, :error)}
+  id="flash-error"
+  role="alert"
+  class="bp-flash bp-flash-error"
+  phx-click="lv:clear-flash"
+  phx-value-key="error"
+  phx-hook="FlashAutoClear"
+  data-key="error"
+  data-dismiss-after="8000"
+>
+  {Phoenix.Flash.get(@flash, :error)}
+</div>
+
+{@inner_content}
