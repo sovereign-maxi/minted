@@ -60,7 +60,7 @@ defmodule MintedWeb.Live.Components.WithdrawalPanel do
           </.btn>
         </div>
       <% else %>
-        <form phx-submit="submit_invoice" phx-change="update_invoice" phx-target={@myself}>
+        <form id="withdrawal-form" phx-submit="submit_invoice" phx-change="update_invoice" phx-target={@myself}>
           <.field_textarea
             label="Lightning Invoice (Bolt11)"
             id="withdraw-invoice"

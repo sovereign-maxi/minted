@@ -40,7 +40,7 @@ defmodule MintedWeb.Live.Components.RestorePanel do
   def render(assigns) do
     ~H"""
     <div id={@id}>
-      <form phx-submit="submit_restore" phx-change="update_token" phx-target={@myself}>
+      <form id="restore-form" phx-submit="submit_restore" phx-change="update_token" phx-target={@myself}>
         <.field_textarea
           label="Cashu Token String"
           id="restore-token"

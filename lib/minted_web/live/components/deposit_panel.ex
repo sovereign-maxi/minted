@@ -282,7 +282,7 @@ defmodule MintedWeb.Live.Components.DepositPanel do
   def render(assigns) do
     ~H"""
     <div id={@id}>
-      <form phx-change="validate_deposit" phx-submit="request_quote" phx-target={@myself}>
+      <form id="deposit-form" phx-change="validate_deposit" phx-submit="request_quote" phx-target={@myself}>
         <.field_input
           label="Amount"
           badge="sats"
