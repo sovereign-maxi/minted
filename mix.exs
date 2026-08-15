@@ -65,7 +65,6 @@ defmodule Minted.MixProject do
       {:blueprint, path: "../blueprint"},
 
       # Shared precision arithmetic and conversion constants
-      {:core, path: "../core"},
 
       # Anti-sybil: PoW challenges, rate limiting, circuit extraction
       {:seer, path: "../seer"},

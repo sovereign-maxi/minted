@@ -113,7 +113,6 @@ Fees are configurable — the protocol doesn't mandate a schedule. A conforming 
 {:locker,    path: "../locker"},
 {:vault,     path: "../vault"},
 {:fire_bird, path: "../firebird"},
-{:core,      path: "../core"},
 ```
 
 All primitives are published under [github.com/sovereign-maxi](https://github.com/sovereign-maxi).

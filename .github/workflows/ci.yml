@@ -62,12 +62,6 @@ jobs:
           repository: sovereign-maxi/firebird
           path: firebird
 
-      - name: Checkout core
-        uses: actions/checkout@v4
-        with:
-          repository: sovereign-maxi/core
-          path: core
-
       - name: Checkout nutty
         uses: actions/checkout@v4
         with:
